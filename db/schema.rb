@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_12_223849) do
+ActiveRecord::Schema.define(version: 2023_01_12_225406) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,10 +18,10 @@ ActiveRecord::Schema.define(version: 2023_01_12_223849) do
   create_table "bulk_discounts", force: :cascade do |t|
     t.integer "quantity_threshold"
     t.decimal "percentage_discount", precision: 5, scale: 4
-    t.bigint "merchants_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["merchants_id"], name: "index_bulk_discounts_on_merchants_id"
+    t.bigint "merchant_id"
+    t.index ["merchant_id"], name: "index_bulk_discounts_on_merchant_id"
   end
 
   create_table "customers", force: :cascade do |t|
@@ -79,7 +79,7 @@ ActiveRecord::Schema.define(version: 2023_01_12_223849) do
     t.index ["invoice_id"], name: "index_transactions_on_invoice_id"
   end
 
-  add_foreign_key "bulk_discounts", "merchants", column: "merchants_id"
+  add_foreign_key "bulk_discounts", "merchants"
   add_foreign_key "invoice_items", "invoices"
   add_foreign_key "invoice_items", "items"
   add_foreign_key "invoices", "customers"
