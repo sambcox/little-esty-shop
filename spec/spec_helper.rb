@@ -15,6 +15,7 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 require 'csv'
 require 'simplecov'
+require 'faker'
 SimpleCov.start do
   add_filter 'spec/rails_helper.rb'
 end
@@ -69,6 +70,17 @@ RSpec.configure do |config|
       Transaction.create!(row.to_h)
     end
     ActiveRecord::Base.connection.reset_pk_sequence!('transactions')
+  end
+
+  def bulk_discount_test_seed_scenario_1
+    @merchant_1 = Merchant.create!({ name: Faker::Company.name })
+    @item_1 = @merchant_1.items.create!({ name: Faker::Commerce.product_name, unit_price: Faker::Number.between(from: 100, to: 999999), description: Faker::TvShows::Community.quotes })
+    @item_2 = @merchant_1.items.create!({ name: Faker::Commerce.product_name, unit_price: Faker::Number.between(from: 100, to: 999999), description: Faker::TvShows::Community.quotes })
+    @customer_1 = Customer.create!({ first_name: Faker::Name.first_name, last_name: Faker::Name.last_name })
+    @invoice_1 = @customer_1.invoices.create!({ status: ['completed', 'in progress', 'cancelled'].shuffle.first })
+    InvoiceItem.create!({ status: ['pending', 'packaged', 'shipped'].shuffle.first, invoice_id: @invoice_1.id, item_id: @item_1.id, quantity: 5, unit_price: @item_1.unit_price })
+    InvoiceItem.create!({ status: ['pending', 'packaged', 'shipped'].shuffle.first, invoice_id: @invoice_1.id, item_id: @item_2.id, quantity: 5, unit_price: @item_2.unit_price })
+    @bulk_discount_1 = @merchant_1.bulk_discounts.create!({ quantity_threshold: 10, percentage_discount: 0.2 })
   end
 
   # rspec-mocks config goes here. You can use an alternate test double
