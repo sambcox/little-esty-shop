@@ -44,5 +44,12 @@ RSpec.describe 'The Merchant Dashboard' do
       expect(Item.find(2).name).to appear_before(Item.find(3).name)
       expect(Item.find(3).name).to appear_before(Item.find(4).name)
     end
+
+    it 'contains a link to view all merchant specific discounts' do
+      bulk_discount_test_seed_scenario_5
+      visit merchant_dashboard_path(@merchant_1)
+
+      expect(page).to have_link('Bulk Discounts', href: merchant_bulk_discounts_path(@merchant_1))
+    end
   end
 end
