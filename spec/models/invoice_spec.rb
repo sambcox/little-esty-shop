@@ -20,5 +20,17 @@ RSpec.describe Invoice do
     it 'returns the total revenue for a specific invoice' do
       expect(Invoice.find(31).total_invoice_revenue).to eq('$28,499.29')
     end
+
+    it 'returns the total revenue for an invoice for one merchant' do
+      InvoiceItem.create!({item_id: 4, invoice_id: 31, quantity: 40, unit_price: Item.find(4).unit_price})
+
+      expect(Invoice.find(31).total_merchant_invoice_revenue(8)).to eq('$28,499.29')
+    end
+
+    it 'returns the total revenue for a specific merchants invoice after discount' do
+      bulk_discount_test_seed_scenario_5
+
+      expect(@invoice_1.total_discount_invoice_revenue(@merchant_1)).to eq('$15,300.00')
+    end
   end
 end
