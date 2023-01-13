@@ -16,5 +16,11 @@ RSpec.describe BulkDiscount do
 
       expect(@merchant_1.bulk_discounts_on_invoice(@invoice_1)).to eq([])
     end
+
+    it 'only applies the discount to specific item quantity threshold is met on' do
+      bulk_discount_test_seed_scenario_2
+
+      expect(@merchant_1.bulk_discounts_on_invoice(@invoice_1)).to eq([@item_1])
+    end
   end
 end

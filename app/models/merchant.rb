@@ -64,4 +64,8 @@ class Merchant < ApplicationRecord
          .distinct
          .limit(5)
   end
+
+  def bulk_discounts_on_invoice(invoice_id)
+    self.items.joins(merchant: :bulk_discounts).joins(:invoice_items).where('invoice_items.quantity >= bulk_discounts.quantity_threshold').where('invoice_items.invoice_id = ?', invoice_id).select('items.*, bulk_discounts.percentage_discount').group(:id).group('bulk_discounts.percentage_discount')
+  end
 end
