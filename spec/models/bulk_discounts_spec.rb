@@ -49,4 +49,12 @@ RSpec.describe BulkDiscount do
       expect(@merchant_2.bulk_discounts_on_invoice(@invoice_1)).to eq([])
     end
   end
+
+  describe '#display_discount_percentage' do
+    it 'returns the discount formatted as a percentage' do
+      bulk_discount_test_seed_scenario_5
+
+      expect(@bulk_discount_1.display_discount_percentage).to eq('20%')
+    end
+  end
 end
