@@ -7,7 +7,7 @@ RSpec.describe BulkDiscount do
 
   describe 'Validations' do
     it { should validate_numericality_of :quantity_threshold }
-    it { should validate_numericality_of(:percentage_discount).is_less_than(1) }
+    it { should validate_numericality_of :percentage_discount }
   end
 
   describe '#bulk_discounts_on_invoice' do
@@ -55,6 +55,15 @@ RSpec.describe BulkDiscount do
       bulk_discount_test_seed_scenario_5
 
       expect(@bulk_discount_1.display_discount_percentage).to eq('20%')
+    end
+  end
+
+  describe '#numericize_discount_percentage' do
+    it 'reformats the discount if need be' do
+      bulk_discount_test_seed_scenario_5
+
+      bulk_discount = @merchant_1.bulk_discounts.create!({quantity_threshold: 2, percentage_discount: 2})
+      expect(bulk_discount.percentage_discount).to eq 0.02
     end
   end
 end
