@@ -25,16 +25,16 @@ RSpec.describe 'merchants bulk discounts index' do
   it 'has a button to delete each bulk discount' do
     bulk_discount_test_seed_scenario_5
     visit merchant_bulk_discounts_path(@merchant_1)
-    bulk_discount = @merchant_1.bulk_discounts.first
+    bulk_discount_id = @merchant_1.bulk_discounts.first.id
 
-    within("#bulk_discount_#{bulk_discount.id}") do
+    within("#bulk_discount_#{bulk_discount_id}") do
       click_button 'Delete Bulk Discount'
     end
 
     expect(current_path).to eq(merchant_bulk_discounts_path(@merchant_1))
     expect(page).to have_content(@merchant_1.bulk_discounts.last.quantity_threshold)
-    expect(page).to_not have_content(bulk_discount.quantity_threshold)
-    reload bulk_discount
-    expect(bulk_discount.exists?).to eq false
+    expect(page).to_not have_selector("#bulk_discount_#{bulk_discount_id}")
+
+    expect(BulkDiscount.exists?(bulk_discount_id)).to eq false
   end
 end
