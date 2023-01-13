@@ -1,0 +1,11 @@
+<%= render partial: 'merchants/shared/header' %>
+
+<h4>New Bulk Discount</h4>
+
+<%= form_with model: [@merchant, @bulk_discount], local: true do |form| %>
+  <%= form.label :quantity_threshold, 'Amount of item to buy:' %>
+  <%= form.number_field :quantity_threshold %><br>
+  <%= form.label :percentage_discount, 'Percentage discount:' %>
+  <%= form.text_field :percentage_discount %><br>
+  <%= form.submit %>
+<% end %>

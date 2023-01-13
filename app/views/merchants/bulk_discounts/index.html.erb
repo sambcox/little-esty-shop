@@ -1,6 +1,7 @@
 <%= render partial: 'merchants/shared/header' %>
 
 <h4>Bulk Discounts</h4>
+<%= button_to 'Create a new bulk discount', new_merchant_bulk_discount_path(@merchant), method: :get %>
 <% @merchant.bulk_discounts.each do |discount| %>
   <p class=column><%= link_to "#{discount.display_discount_percentage} discount when buying #{discount.quantity_threshold} or more of a specific item", merchant_bulk_discount_path(@merchant, discount) %></p>
 <% end %>
