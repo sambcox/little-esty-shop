@@ -49,7 +49,7 @@ RSpec.describe 'The Merchant Dashboard' do
       bulk_discount_test_seed_scenario_5
       visit merchant_dashboard_path(@merchant_1)
 
-      expect(page).to have_link('Merchant Bulk Discounts', href: merchant_bulk_discounts_path(@merchant_1))
+      expect(page).to have_link('Bulk Discounts', href: merchant_bulk_discounts_path(@merchant_1))
     end
   end
 end
