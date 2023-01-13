@@ -1,0 +1,7 @@
+<%= render partial: 'merchants/shared/header' %>
+
+<h4>Bulk Discount #<%= @bulk_discount.id %></h4>
+<h3>Quantity needed to meet discount:</h3>
+<%= @bulk_discount.quantity_threshold %>
+<h3>Discount Percentage:</h3>
+<%= @bulk_discount.display_discount_percentage %>
