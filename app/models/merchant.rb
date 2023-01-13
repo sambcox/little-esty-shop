@@ -65,7 +65,19 @@ class Merchant < ApplicationRecord
          .limit(5)
   end
 
+  def maximum_discount
+    invoice_items.joins(item: { merchant: :bulk_discounts })
+                 .where('invoice_items.quantity >= bulk_discounts.quantity_threshold')
+                 .select("invoice_items.item_id, max(bulk_discounts.percentage_discount) as max_discount")
+                 .group(:item_id)
+  end
+
   def bulk_discounts_on_invoice(invoice_id)
-    self.items.joins(merchant: :bulk_discounts).joins(:invoice_items).where('invoice_items.quantity >= bulk_discounts.quantity_threshold').where('invoice_items.invoice_id = ?', invoice_id).select('items.*, bulk_discounts.percentage_discount').group(:id).group('bulk_discounts.percentage_discount')
+    self.items.joins("INNER JOIN (#{maximum_discount.to_sql}) max_discounts ON max_discounts.item_id = items.id")
+              .joins(:invoice_items)
+              .where("invoice_items.invoice_id = ?", invoice_id)
+              .select("items.*, max_discounts.max_discount as item_discount")
+              .group(:id)
+              .group('item_discount')
   end
 end
