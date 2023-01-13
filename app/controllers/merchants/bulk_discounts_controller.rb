@@ -17,7 +17,7 @@ module Merchants
       if bulk_discount.save
         redirect_to merchant_bulk_discounts_path(merchant)
       else
-        flash[:notice] = bulk_discount.errors.full_messages
+        flash[:notice] = 'Not a valid discount'
         redirect_to new_merchant_bulk_discount_path(merchant)
       end
     end
