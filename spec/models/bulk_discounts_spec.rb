@@ -24,12 +24,20 @@ RSpec.describe BulkDiscount do
       expect(@merchant_1.bulk_discounts_on_invoice(@invoice_1).first.item_discount).to eq(0.2)
     end
 
-    it 'applies the correct discount to each item' do
+    it 'applies the correct discount to each item when an item qualifies for more than one discount' do
       bulk_discount_test_seed_scenario_3
 
       expect(@merchant_1.bulk_discounts_on_invoice(@invoice_1).sort).to eq([@item_1, @item_2].sort)
       expect(@merchant_1.bulk_discounts_on_invoice(@invoice_1).sort.first.item_discount).to eq(0.2)
       expect(@merchant_1.bulk_discounts_on_invoice(@invoice_1).sort.second.item_discount).to eq(0.3)
+    end
+
+    it 'applies the correct discount to each item when both items qualify for both discounts' do
+      bulk_discount_test_seed_scenario_4
+
+      expect(@merchant_1.bulk_discounts_on_invoice(@invoice_1).sort).to eq([@item_1, @item_2].sort)
+      expect(@merchant_1.bulk_discounts_on_invoice(@invoice_1).sort.first.item_discount).to eq(0.2)
+      expect(@merchant_1.bulk_discounts_on_invoice(@invoice_1).sort.second.item_discount).to eq(0.2)
     end
   end
 end
