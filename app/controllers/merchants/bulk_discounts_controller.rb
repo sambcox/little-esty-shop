@@ -34,6 +34,23 @@ module Merchants
       @bulk_discount = BulkDiscount.find(params[:id])
     end
 
+    def edit
+      @merchant = Merchant.find(params[:merchant_id])
+      @bulk_discount = BulkDiscount.find(params[:id])
+    end
+
+    def update
+      merchant = Merchant.find(params[:merchant_id])
+      bulk_discount = BulkDiscount.find(params[:id])
+
+      if bulk_discount.update(bulk_discount_params)
+        redirect_to merchant_bulk_discount_path(merchant, bulk_discount)
+      else
+        flash[:notice] = 'Not a valid discount'
+        redirect_to edit_merchant_bulk_discount_path(merchant, bulk_discount)
+      end
+    end
+
     private
 
     def bulk_discount_params

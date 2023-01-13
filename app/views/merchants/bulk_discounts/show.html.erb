@@ -1,7 +1,12 @@
 <%= render partial: 'merchants/shared/header' %>
 
 <h4>Bulk Discount #<%= @bulk_discount.id %></h4>
-<h3>Quantity needed to meet discount:</h3>
-<%= @bulk_discount.quantity_threshold %>
-<h3>Discount Percentage:</h3>
-<%= @bulk_discount.display_discount_percentage %>
+
+<%= button_to 'Edit Bulk Discount', edit_merchant_bulk_discount_path(@merchant, @bulk_discount), method: :get%>
+
+<div id='discount_information'>
+  <h3>Quantity needed to meet discount:</h3>
+  <%= @bulk_discount.quantity_threshold %>
+  <h3>Discount Percentage:</h3>
+  <%= @bulk_discount.display_discount_percentage %>
+</div>
