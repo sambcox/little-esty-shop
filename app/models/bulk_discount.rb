@@ -6,7 +6,7 @@ class BulkDiscount < ApplicationRecord
   before_validation :numericise_percentage_discount
 
   def numericise_percentage_discount
-    self.percentage_discount = self.percentage_discount.to_f / 100 if self.percentage_discount.to_i > 1
+    self.percentage_discount = percentage_discount.to_f / 100 if percentage_discount.to_i > 1
   end
 
   def display_discount_percentage
