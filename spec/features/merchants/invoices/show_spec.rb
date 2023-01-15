@@ -39,7 +39,7 @@ RSpec.describe 'Merchants Invoice Show' do
   it 'Shows the total revenue for the specific invoice' do
     visit merchant_invoice_path(Merchant.find(8), Invoice.find(31))
 
-    expect(page).to have_content('Total invoice revenue: $28,499.29')
+    expect(page).to have_content('Total Invoice Revenue: $28,499.29')
   end
 
   it 'Has a field to update the status of an item on the invoice' do
@@ -60,5 +60,12 @@ RSpec.describe 'Merchants Invoice Show' do
       expect(page).to have_content('Pending')
       expect(page).to have_select('invoice_item[status]', selected: 'Pending')
     end
+  end
+
+  it 'Displays the total revenue before discounts and after discounts' do
+    bulk_discount_test_seed_scenario_5
+    visit merchant_invoice_path(@merchant_1, @invoice_1)
+
+    expect(page).to have_content('Discounted Invoice Revenue: $16,500.00')
   end
 end

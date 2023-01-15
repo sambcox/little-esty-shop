@@ -3,9 +3,11 @@
 <h4>Invoice #<%= @invoice.id %></h4>
 Status: <%= @invoice.status.capitalize %><br>
 Created on: <%= @invoice.created_at.strftime('%A, %B %-d, %Y') %><br>
-Total invoice revenue: <%= @invoice.total_invoice_revenue %><br>
+Total Invoice Revenue: <%= @invoice.total_merchant_invoice_revenue(@merchant.id) %><br>
+Discounted Invoice Revenue: <%= @invoice.total_discount_invoice_revenue(@merchant) %>
 <h3>Customer:</h3>
- <%= "#{@invoice.customer.first_name} #{@invoice.customer.last_name}" %><br>
+<%= "#{@invoice.customer.first_name} #{@invoice.customer.last_name}" %><br>
+
 
 <h3>Items on this invoice:</h3>
 <table>

@@ -1,6 +1,7 @@
 class Invoice < ApplicationRecord
   belongs_to :customer
   has_many :invoice_items, dependent: :destroy
+  has_many :bulk_discounts, through: :invoice_items
   has_many :items, through: :invoice_items
   has_many :transactions, dependent: :destroy
   enum status: { 'in progress' => 0, completed: 1, cancelled: 2 }
@@ -11,7 +12,21 @@ class Invoice < ApplicationRecord
            .distinct.order(:updated_at)
   end
 
+  def total_merchant_invoice_revenue(merch_id)
+    number_to_currency(self.items.where(merchant_id: merch_id).sum('invoice_items.quantity * invoice_items.unit_price') / 100.0)
+  end
+
   def total_invoice_revenue
     number_to_currency(self.invoice_items.sum('invoice_items.quantity * invoice_items.unit_price') / 100.0)
+  end
+
+  def total_discount_invoice_revenue(merch)
+    subquery = merch.items.joins(:invoice_items)
+                    .left_joins(:bulk_discounts)
+                    .where("invoice_items.invoice_id = ?", self.id)
+                    .select('invoice_items.*, CASE WHEN max(bulk_discounts.quantity_threshold) <= invoice_items.quantity THEN invoice_items.quantity * invoice_items.unit_price * (1 - max(bulk_discounts.percentage_discount)) ELSE invoice_items.quantity * invoice_items.unit_price END as revenue')
+                    .group(:id, 'invoice_items.id', 'bulk_discounts.quantity_threshold', 'bulk_discounts.percentage_discount')
+    subquery_2 = Item.from(subquery).select('item_id, min(revenue) as minimum_revenue').group('item_id')
+    number_to_currency(Item.from(subquery_2).sum('minimum_revenue')/ 100)
   end
 end
