@@ -4,7 +4,7 @@
 Status: <%= @invoice.status.capitalize %><br>
 Created on: <%= @invoice.created_at.strftime('%A, %B %-d, %Y') %><br>
 Total Invoice Revenue: <%= @invoice.total_merchant_invoice_revenue(@merchant.id) %><br>
-Discounted Invoice Revenue: <%= @invoice.total_discount_invoice_revenue(@merchant) %>
+Discounted Invoice Revenue: <%= @invoice.total_merchant_discount_invoice_revenue(@merchant) %>
 <h3>Customer:</h3>
 <%= "#{@invoice.customer.first_name} #{@invoice.customer.last_name}" %><br>
 
