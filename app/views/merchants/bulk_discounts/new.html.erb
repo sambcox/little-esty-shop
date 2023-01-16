@@ -1,0 +1,9 @@
+<%= render partial: 'merchants/shared/header' %>
+
+<%= form_with url: "/merchants/#{@merchant.id}/bulk_discounts", local: true do |form| %>
+  <%= form.label :percentage_discount, 'Percent Off' %>
+  <%= form.number_field :percentage_discount %>
+  <%= form.label :quantity_threshold, 'Quantity Needed' %>
+  <%= form.number_field :quantity_threshold %>
+  <%= form.submit "Create Discount" %>
+<% end %>
