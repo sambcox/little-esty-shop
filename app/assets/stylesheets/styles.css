@@ -69,6 +69,13 @@ nav {
   padding-bottom: 10px;
 }
 
+.bulk_discount_body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding-bottom: 10px;
+}
+
 .header {
   display: flex;
   justify-content: space-around;
@@ -107,4 +114,8 @@ body {
 
 #github_info {
   border-top: 3px solid black;
+}
+
+#upcoming_holidays {
+  float: right;
 }

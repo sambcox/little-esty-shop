@@ -37,4 +37,20 @@ RSpec.describe 'merchants bulk discounts index' do
 
     expect(BulkDiscount.exists?(bulk_discount_id)).to eq false
   end
+
+  it 'shows upcoming holidays' do
+    bulk_discount_test_seed_scenario_5
+    visit merchant_bulk_discounts_path(@merchant_1)
+    get_url = HTTParty.get("https://date.nager.at/api/v3/NextPublicHolidays/US")
+    holidays = JSON.parse(get_url.body, symbolize_names: true)
+
+    within '#upcoming_holidays' do
+      expect(page).to have_content(holidays.first[:localName])
+      expect(page).to have_content(holidays.second[:localName])
+      expect(page).to have_content(holidays.third[:localName])
+      expect(page).to have_content(holidays.first[:date])
+      expect(page).to have_content(holidays.second[:date])
+      expect(page).to have_content(holidays.third[:date])
+    end
+  end
 end

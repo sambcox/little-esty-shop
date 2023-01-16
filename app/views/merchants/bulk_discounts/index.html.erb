@@ -2,11 +2,21 @@
 
 <h4>Bulk Discounts</h4>
 <%= button_to 'Create a new bulk discount', new_merchant_bulk_discount_path(@merchant), method: :get %>
-<% @merchant.bulk_discounts.each do |discount| %>
-  <div id='bulk_discount_<%= discount.id %>'>
-    <p class='column'>
-      <%= link_to "#{discount.display_discount_percentage} discount when buying #{discount.quantity_threshold} or more of a specific item", merchant_bulk_discount_path(@merchant, discount) %>
-      <%= button_to 'Delete Bulk Discount', merchant_bulk_discount_path(@merchant, discount), method: :delete %>
-    </p>
+
+<div class='bulk_discount_body'>
+  <% @merchant.bulk_discounts.each do |discount| %>
+    <div id='bulk_discount_<%= discount.id %>'>
+      <p class='column'>
+        <%= link_to "#{discount.display_discount_percentage} discount when buying #{discount.quantity_threshold} or more of a specific item", merchant_bulk_discount_path(@merchant, discount) %>
+        <%= button_to 'Delete Bulk Discount', merchant_bulk_discount_path(@merchant, discount), method: :delete %>
+      </p>
+    </div>
+  <% end %>
+  <div id='upcoming_holidays'>
+  <h3>Upcoming Holidays</h3>
+
+    <p class=column><%= @holidays.holiday_names.first %> - <%= @holidays.holiday_dates.first %></p>
+    <p class=column><%= @holidays.holiday_names.second %> - <%= @holidays.holiday_dates.second %></p>
+    <p class=column><%= @holidays.holiday_names.third %> - <%= @holidays.holiday_dates.third %></p>
   </div>
-<% end %>
+</div>
