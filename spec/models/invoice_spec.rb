@@ -30,12 +30,18 @@ RSpec.describe Invoice do
     it 'returns the total revenue for a specific merchants invoice after discount' do
       bulk_discount_test_seed_scenario_5
 
-      expect(@invoice_1.total_discount_invoice_revenue(@merchant_1)).to eq('$16,500.00')
+      expect(@invoice_1.total_merchant_discount_invoice_revenue(@merchant_1)).to eq('$16,500.00')
 
       @new_item = @merchant_1.items.create!({ name: Faker::Commerce.product_name, unit_price: 20000, description: Faker::TvShows::Community.quotes })
       InvoiceItem.create!({ invoice_id: @invoice_1.id, item_id: @new_item.id, unit_price: @new_item.unit_price, quantity: 5})
 
-      expect(@invoice_1.total_discount_invoice_revenue(@merchant_1)).to eq('$17,500.00')
+      expect(@invoice_1.total_merchant_discount_invoice_revenue(@merchant_1)).to eq('$17,500.00')
+    end
+
+    it 'returns the total revenue for a total invoice after discount' do
+      bulk_discount_test_seed_scenario_5
+
+      expect(@invoice_1.total_discount_invoice_revenue).to eq('$21,000.00')
     end
   end
 end
