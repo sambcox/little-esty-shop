@@ -16,6 +16,7 @@ Discounted Invoice Revenue: <%= @invoice.total_merchant_discount_invoice_revenue
     <th>Quantity</th>
     <th>Unit Price</th>
     <th>Status</th>
+    <th>Bulk Discount</th>
   </tr>
   <% @invoice.invoice_items.each do |invoice_item| %>
     <div id='item_<%= invoice_item.id %>'>
@@ -28,6 +29,9 @@ Discounted Invoice Revenue: <%= @invoice.total_merchant_discount_invoice_revenue
           <%= form.select :status, options_for_select(['Pending', 'Packaged', 'Shipped'], invoice_item.status.capitalize) %>
           <%= form.submit 'Update Item Status' %></td>
 
+        <% end %>
+        <% if invoice_item.bulk_discount %>
+          <td><%= link_to 'Item Bulk Discount', merchant_bulk_discount_path(@merchant, invoice_item.bulk_discount) %></td>
         <% end %>
       </tr>
     </div>
