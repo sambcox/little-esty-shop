@@ -6,6 +6,7 @@ RSpec.describe Invoice do
     it { should have_many :transactions }
     it { should have_many :invoice_items }
     it { should have_many(:items).through(:invoice_items) }
+    it { should have_many(:bulk_discounts).through(:invoice_items) }
   end
 
   describe 'Class Methods' do
@@ -42,6 +43,13 @@ RSpec.describe Invoice do
       bulk_discount_test_seed_scenario_5
 
       expect(@invoice_1.total_discount_invoice_revenue).to eq('$21,000.00')
+    end
+
+    it 'it returns all possible revenue instances' do
+      bulk_discount_test_seed_scenario_5
+
+      expect(@invoice_1.possible_revenue.length).to eq 5
+      expect(@invoice_1.possible_revenue.map { |r| r.revenue }.sort).to eq([210000, 240000, 450000, 1440000, 1800000])
     end
   end
 end
