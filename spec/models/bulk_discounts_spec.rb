@@ -8,6 +8,17 @@ RSpec.describe BulkDiscount do
   describe 'Validations' do
     it { should validate_numericality_of :quantity_threshold }
     it { should validate_numericality_of :percentage_discount }
+
+    it 'validates redundancy' do
+      bulk_discount_test_seed_scenario_5
+      new_discount = @merchant_1.bulk_discounts.new({percentage_discount: 10, quantity_threshold: 20})
+      expect(new_discount.valid?).to eq false
+      new_discount.validate
+      expect(new_discount.errors.full_messages).to include('Redundant discount already exists')
+
+      new_discount_2 = @merchant_2.bulk_discounts.new({percentage_discount: 10, quantity_threshold: 20})
+      expect(new_discount_2.valid?).to eq true
+    end
   end
 
   describe '#bulk_discounts_on_invoice' do
