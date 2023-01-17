@@ -48,8 +48,8 @@ RSpec.describe Invoice do
     it 'it returns all possible revenue instances' do
       bulk_discount_test_seed_scenario_5
 
-      expect(@invoice_1.possible_revenue.length).to eq 5
-      expect(@invoice_1.possible_revenue.map { |r| r.revenue }.sort).to eq([210000, 240000, 450000, 1440000, 1800000])
+      expect(@invoice_1.possible_revenue.length).to eq 3
+      expect(@invoice_1.possible_revenue.map { |r| r.revenue }.sort).to eq([210000, 450000, 1440000])
     end
   end
 end

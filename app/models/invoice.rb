@@ -21,28 +21,22 @@ class Invoice < ApplicationRecord
   end
 
   def possible_revenue
-    case_statement = 'CASE WHEN bulk_discounts.quantity_threshold <= invoice_items.quantity
-                           THEN invoice_items.quantity * invoice_items.unit_price * (1 - bulk_discounts.percentage_discount)
-                           ELSE invoice_items.quantity * invoice_items.unit_price
-                           END as revenue'
+    case_statement = 'min(invoice_items.quantity * invoice_items.unit_price *
+                     (CASE WHEN bulk_discounts.quantity_threshold <= invoice_items.quantity
+                           THEN (1 - bulk_discounts.percentage_discount)
+                           ELSE 1
+                           END)) as revenue'
 
     self.invoice_items.left_joins(:bulk_discounts)
                       .select("invoice_items.*, items.merchant_id, #{case_statement}")
-                      .group(:id,'items.merchant_id', 'bulk_discounts.quantity_threshold', 'bulk_discounts.percentage_discount')
+                      .group(:id,'items.merchant_id')
   end
 
   def total_merchant_discount_invoice_revenue(merch)
-    subquery = Item.from(possible_revenue)
-                   .where('merchant_id = ?', merch.id)
-                   .select('id, min(revenue) as minimum_revenue')
-                   .group('id')
-    number_to_currency(Item.from(subquery).sum('minimum_revenue') / 100)
+    number_to_currency(Item.from(possible_revenue).where('merchant_id = ?', merch.id).sum('revenue') / 100)
   end
 
   def total_discount_invoice_revenue
-    subquery = Item.from(possible_revenue)
-                   .select('id, min(revenue) as minimum_revenue')
-                   .group('id')
-    number_to_currency(Item.from(subquery).sum('minimum_revenue') / 100)
+    number_to_currency(Item.from(possible_revenue).sum('revenue') / 100)
   end
 end
