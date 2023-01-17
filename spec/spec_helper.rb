@@ -115,7 +115,8 @@ RSpec.configure do |config|
     InvoiceItem.create!({ status: ['pending', 'packaged', 'shipped'].shuffle.first, invoice_id: @invoice_1.id, item_id: @item_1.id, quantity: 12, unit_price: @item_1.unit_price })
     InvoiceItem.create!({ status: ['pending', 'packaged', 'shipped'].shuffle.first, invoice_id: @invoice_1.id, item_id: @item_2.id, quantity: 15, unit_price: @item_2.unit_price })
     @bulk_discount_1 = @merchant_1.bulk_discounts.create!({ quantity_threshold: 10, percentage_discount: 0.2 })
-    @bulk_discount_2 = @merchant_1.bulk_discounts.create!({ quantity_threshold: 15, percentage_discount: 0.15 })
+    @bulk_discount_2 = @merchant_1.bulk_discounts.new({ quantity_threshold: 15, percentage_discount: 0.15 })
+    @bulk_discount_2.save(validate: false)
   end
 
   def bulk_discount_test_seed_scenario_5

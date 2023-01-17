@@ -3,6 +3,7 @@ class BulkDiscount < ApplicationRecord
 
   validates_numericality_of :quantity_threshold
   validates_numericality_of :percentage_discount, less_than: 1
+  validates_with RedundancyValidator
   before_validation :numericise_percentage_discount
 
   def numericise_percentage_discount
