@@ -21,21 +21,28 @@ class Invoice < ApplicationRecord
   end
 
   def possible_revenue
-    case_statement = 'CASE WHEN max(bulk_discounts.quantity_threshold) <= invoice_items.quantity THEN invoice_items.quantity * invoice_items.unit_price * (1 - max(bulk_discounts.percentage_discount)) ELSE invoice_items.quantity * invoice_items.unit_price END as revenue'
+    case_statement = 'CASE WHEN bulk_discounts.quantity_threshold <= invoice_items.quantity
+                           THEN invoice_items.quantity * invoice_items.unit_price * (1 - bulk_discounts.percentage_discount)
+                           ELSE invoice_items.quantity * invoice_items.unit_price
+                           END as revenue'
 
-    InvoiceItem.left_joins(:bulk_discounts)
-              .where("invoice_items.invoice_id = ?", self.id)
-              .select("invoice_items.*, items.merchant_id, #{case_statement}")
-              .group(:id,'items.merchant_id', 'bulk_discounts.quantity_threshold', 'bulk_discounts.percentage_discount')
+    self.invoice_items.left_joins(:bulk_discounts)
+                      .select("invoice_items.*, items.merchant_id, #{case_statement}")
+                      .group(:id,'items.merchant_id', 'bulk_discounts.quantity_threshold', 'bulk_discounts.percentage_discount')
   end
 
   def total_merchant_discount_invoice_revenue(merch)
-    subquery = Item.from(possible_revenue).where('merchant_id = ?', merch.id).select('id, min(revenue) as minimum_revenue').group('id')
+    subquery = Item.from(possible_revenue)
+                   .where('merchant_id = ?', merch.id)
+                   .select('id, min(revenue) as minimum_revenue')
+                   .group('id')
     number_to_currency(Item.from(subquery).sum('minimum_revenue') / 100)
   end
 
   def total_discount_invoice_revenue
-    subquery = Item.from(possible_revenue).select('id, min(revenue) as minimum_revenue').group('id')
+    subquery = Item.from(possible_revenue)
+                   .select('id, min(revenue) as minimum_revenue')
+                   .group('id')
     number_to_currency(Item.from(subquery).sum('minimum_revenue') / 100)
   end
 end
